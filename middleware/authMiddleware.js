@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 const SECRET = 'segredo_super_top';
 
-function authMiddleware(req, res, next) {
+export default function authMiddleware(req, res, next) {
     console.log(JSON.stringify(req.headers));
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -14,5 +14,3 @@ function authMiddleware(req, res, next) {
     next();
   });
 }
-
-module.exports = authMiddleware;

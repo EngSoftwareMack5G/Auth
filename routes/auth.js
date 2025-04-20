@@ -1,12 +1,13 @@
-const express = require('express');
-const router = express.Router();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+import express from 'express';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { users }from '../users.js';
+import authMiddleware from '../middleware/authMiddleware.js';
 
-const users = require('../users');
-const authMiddleware = require('../middleware/authMiddleware');
+export const router = express.Router();
 
-const SECRET = 'segredo_super_top'; // em produção use uma env var
+
+const SECRET = 'segredo_super_top'; 
 
 router.post('/register', async (req, res) => {
   const { username, password } = req.body;
@@ -34,5 +35,3 @@ router.post('/login', async (req, res) => {
 router.get('/profile', authMiddleware, (req, res) => {
   res.json({ message: `Bem-vindo, ${req.user.username}` });
 });
-
-module.exports = router;
