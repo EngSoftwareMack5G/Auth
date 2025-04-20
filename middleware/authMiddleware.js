@@ -2,15 +2,15 @@ import jwt from 'jsonwebtoken';
 const SECRET = 'segredo_super_top';
 
 export default function authMiddleware(req, res, next) {
-    console.log(JSON.stringify(req.headers));
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
 
-  if (!token) return res.sendStatus(401);
 
-  jwt.verify(token, SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  });
+    if (!token) return res.sendStatus(401);
+
+    jwt.verify(token, SECRET, (err, user) => {
+        if (err) return res.sendStatus(403);
+        req.user = user;
+        next();
+    });
 }
