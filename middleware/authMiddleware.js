@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-const SECRET = 'segredo_super_top';
+import { SECRET } from '../secret.js';
 
 export default function authMiddleware(req, res, next) {
     const authHeader = req.headers['authorization'];

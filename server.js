@@ -7,5 +7,5 @@ app.use('/auth', authRoutes);
 
 const PORT = 3002;
 app.listen(PORT, () => {
-    console.log(`Auth service running on port ${PORT}`);
+    console.log(`Serviço rodando na porta ${PORT}`);
 });

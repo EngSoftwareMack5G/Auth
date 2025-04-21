@@ -1,15 +1,15 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { users }from '../users.js';
+import { users } from '../users.js';
+import { SECRET } from '../secret.js';
 
 import authMiddleware from '../middleware/authMiddleware.js';
 import verificationMiddleware from '../middleware/verificationMiddleware.js';
 
+
 export const router = express.Router();
 
-
-const SECRET = 'segredo_super_top'; 
 
 router.post('/register', verificationMiddleware, async (req, res) => {
     const { username, password } = req.body;
