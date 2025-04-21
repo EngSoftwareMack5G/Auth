@@ -34,8 +34,9 @@ router.post('/login', verificationMiddleware, async (req, res) => {
     res.json({ token });
 });
 
-router.get('/profile', authMiddleware, (req, res) => {
+router.get('/key', authMiddleware, (req, res) => {
     res.json({
-        message: `Bem-vindo, ${req.user.username}` 
+        key: req.user.username,
+        expiresIn: req.user.exp 
     });
 });
