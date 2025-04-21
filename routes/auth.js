@@ -28,14 +28,14 @@ router.post('/register', verificationMiddleware, async (req, res) => {
 });
 
 router.post('/login', verificationMiddleware, async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, remindMe } = req.body;
     const user = users.find(u => u.username === username);
     if (!user) return res.status(401).json({ message: 'Usuário ou senha incorreta' });
 
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return res.status(401).json({ message: 'Usuário ou senha incorreta' });
-
-    const token = jwt.sign({ username }, SECRET, { expiresIn: '1h' });
+    //Token deve durar 24 Horas por padrão, se remindMe for true, ele não expira
+    const token = jwt.sign({ username }, SECRET, remindMe ? undefined : { expiresIn: '24h' });
     res.json({ token });
 });
 
