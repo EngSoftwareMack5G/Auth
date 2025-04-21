@@ -18,8 +18,8 @@ router.post('/register', verificationMiddleware, async (req, res) => {
     const userExists = users.find(u => u.username === username);
     if (userExists) return res.status(400).json({ message: 'Usuário já existe' });
 
-    if(!emailRegex.test(username)) return res.sendStatus(400).json({ message: 'Email inválido' });
-    if(!passwordRegex.test(password)) return res.sendStatus(400).json({ message: 'Senha deve conter no mínimo 5 dígitos, uma letra maiúscula, um número e um caractere especial' });
+    if(!emailRegex.test(username)) return res.status(400).json({ message: 'Email inválido' });
+    if(!passwordRegex.test(password)) return res.status(400).json({ message: 'Senha deve conter no mínimo 5 dígitos, uma letra maiúscula, um número e um caractere especial' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
     users.push({ username, password: hashedPassword });
