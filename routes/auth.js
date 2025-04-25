@@ -17,14 +17,14 @@ const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}
 router.post('/register', verificationMiddleware, async (req, res) => {
     const { username, password, type } = req.body;
 
-    const userExists = DB.userExists(username);
+    const userExists = await DB.userExists(username);
 
     if (userExists) return res.status(400).json({ message: 'Usuário já existe' });
 
     if(!emailRegex.test(username)) return res.status(400).json({ message: 'Email inválido' });
     if(!passwordRegex.test(password)) return res.status(400).json({ message: 'Senha deve conter no mínimo 5 dígitos, uma letra maiúscula, um número e um caractere especial' });
 
-    DB.registerUser(username, password, type);
+    await DB.registerUser(username, password, type);
 
     res.status(201).json({ message: 'Usuário criado com sucesso' });
 });
@@ -32,7 +32,7 @@ router.post('/register', verificationMiddleware, async (req, res) => {
 router.post('/login', verificationMiddleware, async (req, res) => {
     const { username, password } = req.body;
 
-    const user = DB.getUser(username);
+    const user = await DB.getUser(username);
     if (!user) return res.status(401).json({ message: 'Usuário ou senha incorreta' });
 
     const valid = await bcrypt.compare(password, user.password);
