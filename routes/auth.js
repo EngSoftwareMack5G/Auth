@@ -1,7 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { pool } from '../db.js';
+import { DB } from '../db.js';
 import 'dotenv/config';
 
 import authMiddleware from '../middleware/authMiddleware.js';
@@ -17,15 +17,14 @@ const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}
 router.post('/register', verificationMiddleware, async (req, res) => {
     const { username, password, type } = req.body;
 
-    const userExists = (await pool.query('SELECT * FROM users WHERE username = $1', [username])).rowCount > 0;
+    const userExists = DB.userExists(username);
 
     if (userExists) return res.status(400).json({ message: 'Usuário já existe' });
 
     if(!emailRegex.test(username)) return res.status(400).json({ message: 'Email inválido' });
     if(!passwordRegex.test(password)) return res.status(400).json({ message: 'Senha deve conter no mínimo 5 dígitos, uma letra maiúscula, um número e um caractere especial' });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    await pool.query('INSERT INTO users (username, password, type) VALUES ($1, $2, $3)', [username, hashedPassword, type]);
+    DB.registerUser(username, password, type);
 
     res.status(201).json({ message: 'Usuário criado com sucesso' });
 });
@@ -33,9 +32,7 @@ router.post('/register', verificationMiddleware, async (req, res) => {
 router.post('/login', verificationMiddleware, async (req, res) => {
     const { username, password } = req.body;
 
-    const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
-    const user = result.rows[0];
-
+    const user = DB.getUser(username);
     if (!user) return res.status(401).json({ message: 'Usuário ou senha incorreta' });
 
     const valid = await bcrypt.compare(password, user.password);
