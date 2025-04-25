@@ -41,6 +41,7 @@ Necessita do body:
 }
 ```
 Retorna um Jsonwebtoken se usuário e senha estiverem corretos.
+
 **Exemplo token:**
 ```
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RlNkBnbWFpbC5jb20iLCJ0eXBlIjoiTWVudG9yZXMiLCJpYXQiOjE3NDU2MTk5MDYsImV4cCI6MTc0NTYyMzUwNn0.GV_K0y0U6zazJO9y_5p4ihfsP0CC8iKUtTU3DDCLyec
