@@ -1,12 +1,13 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { users } from '../users.js';
-import { SECRET } from '../secret.js';
+import { pool } from '../db.js';
+import 'dotenv/config';
 
 import authMiddleware from '../middleware/authMiddleware.js';
 import verificationMiddleware from '../middleware/verificationMiddleware.js';
 
+const SECRET = process.env.SECRET;
 
 export const router = express.Router();
 
@@ -15,25 +16,29 @@ const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}
 
 router.post('/register', verificationMiddleware, async (req, res) => {
     const { username, password } = req.body;
-    const userExists = users.find(u => u.username === username);
+
+    const userExists = (await pool.query('SELECT * FROM users WHERE username = $1', [username])).rows[0];
     if (userExists) return res.status(400).json({ message: 'Usuário já existe' });
 
     if(!emailRegex.test(username)) return res.status(400).json({ message: 'Email inválido' });
     if(!passwordRegex.test(password)) return res.status(400).json({ message: 'Senha deve conter no mínimo 5 dígitos, uma letra maiúscula, um número e um caractere especial' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    users.push({ username, password: hashedPassword });
+    await pool.query('INSERT INTO users (username, password) VALUES ($1, $2)', [username, hashedPassword]);
 
     res.status(201).json({ message: 'Usuário criado com sucesso' });
 });
 
 router.post('/login', verificationMiddleware, async (req, res) => {
     const { username, password, remindMe } = req.body;
-    const user = users.find(u => u.username === username);
+
+    const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+    const user = result.rows[0];
     if (!user) return res.status(401).json({ message: 'Usuário ou senha incorreta' });
 
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return res.status(401).json({ message: 'Usuário ou senha incorreta' });
+
     //Token deve durar 24 Horas por padrão, se remindMe for true, ele não expira
     const token = jwt.sign({ username }, SECRET, remindMe ? undefined : { expiresIn: '24h' });
     res.json({ token });
