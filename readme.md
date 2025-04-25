@@ -18,3 +18,39 @@ CREATE TABLE users (
   type VARCHAR(255)
 );
 ```
+
+Endpoints até o momento:
+
+## POST auth/register
+Necessita do body:
+```json
+{
+    "username": "emailvalido@gmail.com",
+    "password": "senhainsana",
+    "type": "mentores"
+}
+```
+Cria uma nova entrada no banco
+
+## POST auth/login
+Necessita do body:
+```json
+{
+    "username": "emailvalido@gmail.com",
+    "password": "senhainsana"
+}
+```
+Retorna um Jsonwebtoken se usuário e senha estiverem corretos.
+
+## GET auth/key
+Necessita do header: **authorization: bearer <token>**
+Não sei se será necessário esse endpoint, existe mais para testes
+
+Retorna um json:
+```json
+{
+    "username": "emailvalido@gmail.com",
+    "type": "mentores",
+    "expiresIn": 123123133
+}
+```
