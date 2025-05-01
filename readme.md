@@ -59,3 +59,13 @@ Retorna um json:
     "expiresIn": 123123133
 }
 ```
+
+## DELETE auth/delete
+Necessita do header: **authorization: bearer \<token\>**
+Retorna uma json com uma mensagem e o termo isDeleted
+```json
+{
+    "message": "Usuário deletado com sucesso",
+    "isDeleted": true
+}
+```

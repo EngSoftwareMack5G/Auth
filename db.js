@@ -25,4 +25,18 @@ export class DB {
         return result.rows[0];
     }
 
+    static async deleteUser(username, password) {
+        const result = await pool.query('SELECT password FROM users WHERE username = $1', [username]);
+
+        if (result.rows.length === 0) return false; 
+    
+        const hashedPassword = result.rows[0].password;
+        const isMatch = await bcrypt.compare(password, hashedPassword);
+    
+        if (!isMatch) return false; 
+    
+        await pool.query('DELETE FROM users WHERE username = $1', [username]);
+        return true;
+    }
+    
 }
