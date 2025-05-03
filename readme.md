@@ -61,7 +61,13 @@ Retorna um json:
 ```
 
 ## DELETE auth/delete
-Necessita do header: **authorization: bearer \<token\>**
+Necessita do body:
+```json
+{
+    "username": "emailvalido@gmail.com",
+    "password": "senhainsana"
+}
+```
 Retorna uma json com uma mensagem e o termo isDeleted
 ```json
 {
