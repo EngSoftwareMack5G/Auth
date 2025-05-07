@@ -7,7 +7,7 @@ import 'dotenv/config';
 import authMiddleware from '../middleware/authMiddleware.js';
 import verificationMiddleware from '../middleware/verificationMiddleware.js';
 
-const SECRET = process.env.SECRET;
+const SECRET = process.env.SECRET || segredo;
 
 export const router = express.Router();
 
