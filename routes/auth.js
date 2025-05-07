@@ -30,13 +30,15 @@ router.post('/register', verificationMiddleware, async (req, res) => {
 });
 
 router.post('/login', verificationMiddleware, async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, type } = req.body;
 
     const user = await DB.getUser(username);
     if (!user) return res.status(401).json({ message: 'Usuário ou senha incorreta' });
 
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return res.status(401).json({ message: 'Usuário ou senha incorreta' });
+
+    if (user.type !== type) return res.status(401).json({ message: 'Tipo de usuário incorreto' });
 
     const token = jwt.sign({ username: user.username, type: user.type }, SECRET, { expiresIn: '1h' });
     res.json({ token });
