@@ -26,6 +26,8 @@ router.post('/register', verificationMiddleware, async (req, res) => {
 
     await DB.registerUser(username, password, type);
 
+    console.log(`Usuário ${username} criado com sucesso`);
+
     res.status(201).json({ message: 'Usuário criado com sucesso' });
 });
 
@@ -39,6 +41,9 @@ router.post('/login', verificationMiddleware, async (req, res) => {
     if (!valid) return res.status(401).json({ message: 'Usuário ou senha incorreta' });
 
     const token = jwt.sign({ username: user.username, type: user.type }, SECRET, { expiresIn: '1h' });
+
+    console.log(`Usuário ${username} logado com sucesso`);
+
     res.json({ token });
 });
 
@@ -55,6 +60,8 @@ router.delete('/delete', () => {}, async (req, res) => {
 
     const isDeleted = await DB.deleteUser(username, password);
     if (!isDeleted) return res.status(401).json({ message: 'Usuário ou senha incorreta', isDeleted: false});
+
+    console.log(`Usuário ${username} deletado com sucesso`);
 
     res.json({ message: 'Usuário deletado com sucesso', isDeleted: true });
 })
