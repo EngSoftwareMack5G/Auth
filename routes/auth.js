@@ -32,7 +32,7 @@ router.post('/register', verificationMiddleware, async (req, res) => {
 });
 
 router.post('/login', verificationMiddleware, async (req, res) => {
-    const { username, password, type } = req.body;
+    const { username, password } = req.body;
 
     const user = await DB.getUser(username);
     if (!user) return res.status(401).json({ message: 'Usuário ou senha incorreta' });
@@ -40,13 +40,13 @@ router.post('/login', verificationMiddleware, async (req, res) => {
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return res.status(401).json({ message: 'Usuário ou senha incorreta' });
 
-    if (user.type !== type) return res.status(401).json({ message: 'Tipo de usuário incorreto' });
+    const type = user.type
 
-    const token = jwt.sign({ username: user.username, type: user.type }, SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ username: user.username, type: type }, SECRET, { expiresIn: '1h' });
 
     console.log(`Usuário ${username} logado com sucesso`);
 
-    res.json({ token });
+    res.json({ token, type });
 });
 
 router.get('/key', authMiddleware, (req, res) => {
