@@ -37,7 +37,8 @@ Necessita do body:
 ```json
 {
     "username": "emailvalido@gmail.com",
-    "password": "senhainsana"
+    "password": "senhainsana",
+    "type": "mentores"
 }
 ```
 Retorna um Jsonwebtoken se usuário e senha estiverem corretos.
