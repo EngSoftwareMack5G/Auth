@@ -1,5 +1,6 @@
 import { Pool } from 'pg';
 import 'dotenv/config';
+import bcrypt from 'bcrypt';
 
 export const pool = new Pool({
   user: process.env.DB_USER || 'postgres',
