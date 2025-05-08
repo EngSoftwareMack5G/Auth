@@ -60,6 +60,11 @@ router.get('/key', authMiddleware, (req, res) => {
 router.delete('/delete', authMiddleware, async (req, res) => {
     const { username, password } = req.body;
 
+    // Verifica se o username do token é igual ao username enviado no corpo
+    if (req.user.username !== username) {
+        return res.status(403).json({ message: 'Você não tem permissão para deletar este usuário' });
+    }
+    
     const isDeleted = await DB.deleteUser(username, password);
     if (!isDeleted) return res.status(401).json({ message: 'Usuário ou senha incorreta', isDeleted: false });
 
