@@ -57,13 +57,13 @@ router.get('/key', authMiddleware, (req, res) => {
     });
 });
 
-router.delete('/delete', () => {}, async (req, res) => {
+router.delete('/delete', authMiddleware, async (req, res) => {
     const { username, password } = req.body;
 
     const isDeleted = await DB.deleteUser(username, password);
-    if (!isDeleted) return res.status(401).json({ message: 'Usuário ou senha incorreta', isDeleted: false});
+    if (!isDeleted) return res.status(401).json({ message: 'Usuário ou senha incorreta', isDeleted: false });
 
     console.log(`Usuário ${username} deletado com sucesso`);
 
     res.json({ message: 'Usuário deletado com sucesso', isDeleted: true });
-})
+});
