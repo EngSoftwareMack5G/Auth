@@ -57,6 +57,7 @@ router.get('/key', authMiddleware, (req, res) => {
     });
 });
 
+
 router.delete('/delete', authMiddleware, async (req, res) => {
     const { username, password } = req.body;
 
