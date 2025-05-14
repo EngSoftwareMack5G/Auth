@@ -8,7 +8,7 @@ export const pool = new Pool({
   database: process.env.DB_NAME || 'authdb',
   password: process.env.DB_PASSWORD || '123456',
   port: process.env.DB_PORT || 5432,
-  ssl: true
+  //ssl: true
 });
 
 export class DB {
